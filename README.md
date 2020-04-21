@@ -1,5 +1,5 @@
-# node-api-template
-[![CircleCI](https://circleci.com/gh/andrewcpacifico/node-api-template.svg?style=shield)](https://circleci.com/gh/andrewcpacifico/node-api-template)
+# omnicon-api
+[![CircleCI](https://circleci.com/gh/antecbr/omnicon-api.svg?style=shield&circle-token=4440a7e4dcc8227109a86bd3311bbb695ed486d0)](https://circleci.com/gh/antecbr/omnicon-api)
 
 
-Template for creating new node.js restful apis.
+OmniCon Restul API

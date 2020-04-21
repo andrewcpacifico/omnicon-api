@@ -1,12 +1,12 @@
 {
-  "name": "node-api-template",
+  "name": "@antec/omnicon-api",
   "version": "1.0.0",
-  "description": "Template for creating new node.js apis.",
+  "description": "Omnicon Restful api",
   "main": "lib/index.js",
-  "repository": "git@github.com:andrewcpacifico/node-api-template.git",
+  "repository": "git@github.com:antec/omnicon-api.git",
   "author": "Andrew C. Pacifico <andrewcpacifico@gmail.com>",
-  "license": "MIT",
-  "private": false,
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "lint": "eslint lib",
     "dev": "nodemon --nolazy lib/index.js",
