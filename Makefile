@@ -21,7 +21,7 @@ remove:
 
 .PHONY: logs
 logs:
-	docker-compose logs -f
+	docker-compose logs -f app
 
 .PHONY: test
 test:
