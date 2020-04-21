@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/development.dockerfile
+    command: yarn dev
+    ports:
+      - 7367:7367
+
+    volumes:
+      - .:/usr/src/app

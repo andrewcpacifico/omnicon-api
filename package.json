@@ -1,0 +1,38 @@
+{
+  "name": "node-api-template",
+  "version": "1.0.0",
+  "description": "Template for creating new node.js apis.",
+  "main": "lib/index.js",
+  "repository": "git@github.com:andrewcpacifico/node-api-template.git",
+  "author": "Andrew C. Pacifico <andrewcpacifico@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lint": "eslint lib",
+    "dev": "nodemon --nolazy lib/index.js",
+    "start": "node .",
+    "test": "NODE_ENV=test mocha --recursive --exit --file test/globals.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validation": "^1.0.3",
+    "joi": "^14.3.1",
+    "lodash": "^4.17.15",
+    "nconf": "^0.10.0",
+    "pino": "^5.16.0",
+    "prom-client": "^12.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^5.16.0 || ^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^7.1.1",
+    "nodemon": "^2.0.2",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0"
+  }
+}
