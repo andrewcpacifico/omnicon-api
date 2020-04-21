@@ -43,3 +43,7 @@ rm-dependency:
 .PHONY: clear-dependencies
 clear-dependencies:
 	docker-compose run --rm --no-deps app rm -rf node_modules
+
+.PHONY: connect-mongo
+connect-mongo:
+	docker-compose exec mongo mongo --host mongo
