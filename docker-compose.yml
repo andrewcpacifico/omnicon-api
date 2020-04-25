@@ -1,13 +1,18 @@
 version: "3"
 
 services:
+  mongo:
+    image: mongo:4.0.18-xenial
+
   app:
     build:
       context: .
       dockerfile: ./docker/development.dockerfile
+    depends_on:
+        - mongo
     command: yarn dev
     ports:
-      - 7367:7367
+      - 3461:3461
 
     volumes:
       - .:/usr/src/app
