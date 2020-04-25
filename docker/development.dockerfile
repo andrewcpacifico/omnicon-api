@@ -1,4 +1,4 @@
-FROM node:13.8.0-buster-slim
+FROM node:14.0.0-slim
 
 ENV CODE /usr/src/app
 
