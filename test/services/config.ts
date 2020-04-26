@@ -1,18 +1,15 @@
-const Config = require('../../lib/services/config');
+import sinon from 'sinon';
+import { expect } from 'chai';
+
+import { Config } from '../../src/services/config';
 
 describe('configService', function () {
-  let container;
-
-  function configProvider() {
-    this.file = () => this;
-  }
+  let container: any;
 
   beforeEach(function () {
     container = {
-      path: { join: () => {} },
-      nconf: {
-        Provider: configProvider,
-      },
+      path: { join() {} },
+      nconfProvider: { file() { return this; }, get() {} },
       process: { env: {} },
     };
   });
@@ -22,18 +19,7 @@ describe('configService', function () {
   });
 
   describe('load', function () {
-    it('should store an nconf provider', function () {
-      const configService = new Config(container);
-      configService.load();
-
-      expect(configService.configProvider)
-        .to
-        .be
-        .an
-        .instanceOf(configProvider);
-    });
-
-    it('should fill NODE_ENV it is undefined', function () {
+    it('should fill NODE_ENV if it is undefined', function () {
       const configService = new Config(container);
       configService.load();
 
@@ -60,13 +46,13 @@ describe('configService', function () {
 
   describe('get', function () {
     it('should return nconf provider get', function () {
-      const configService = new Config();
+      const configService = new Config(container);
       const value = 'a';
-      configService.configProvider = { get: sinon.stub().returns(value) };
 
+      sinon.stub(container.nconfProvider, 'get').returns(value);
       const result = configService.get('prop');
 
-      expect(configService.configProvider.get)
+      expect(container.nconfProvider.get)
         .to
         .have
         .been
