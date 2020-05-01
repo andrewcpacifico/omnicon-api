@@ -23,7 +23,7 @@ export function registerDependencies(): DependencyContainer {
   const container = createContainer<DependencyContainer>();
 
   container.register({
-    nconfProvider: asClass(Provider),
+    nconfProvider: asValue(new Provider()),
     pino: asValue(pino),
 
     process: asValue(process),
