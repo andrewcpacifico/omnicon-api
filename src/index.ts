@@ -3,9 +3,10 @@ import { DependencyContainer, registerDependencies } from './dependency-containe
 const dependencyContainer: DependencyContainer = registerDependencies();
 
 function initialize() {
-  const { configService } = dependencyContainer;
+  const { configService, loggerService } = dependencyContainer;
 
   configService.load();
+  loggerService.init();
 }
 
 initialize();
