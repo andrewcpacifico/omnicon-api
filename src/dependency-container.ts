@@ -1,20 +1,27 @@
 import { asClass, asValue, createContainer } from 'awilix';
 import { Provider } from 'nconf';
-import path from 'path';
+
+import { IConfigService, NconfConfigService } from './services/config';
 
 export interface DependencyContainer {
-  nconfProvider: Provider
+  // node
   process: NodeJS.Process
-  path: path.PlatformPath
+
+  // 3rd
+  nconfProvider: Provider,
+
+  // internal
+  configService: IConfigService
 }
 
-export function registerDependencies() {
+export function registerDependencies(): DependencyContainer {
   const container = createContainer<DependencyContainer>();
 
-  // external dependencies
   container.register({
     nconfProvider: asClass(Provider),
     process: asValue(process),
-    path: asValue(path),
+    configService: asClass(NconfConfigService).singleton(),
   });
+
+  return container.cradle;
 }

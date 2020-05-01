@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-import { Config } from '../../src/services/config';
+import { NconfConfig } from '../../../src/services/config';
 
 describe('configService', function () {
   let container: any;
@@ -20,7 +20,7 @@ describe('configService', function () {
 
   describe('load', function () {
     it('should fill NODE_ENV if it is undefined', function () {
-      const configService = new Config(container);
+      const configService = new NconfConfig(container);
       configService.load();
 
       expect(container.process.env.NODE_ENV)

@@ -1,3 +1,11 @@
-import { registerDependencies } from './dependency-container';
+import { DependencyContainer, registerDependencies } from './dependency-container';
 
-registerDependencies();
+const dependencyContainer: DependencyContainer = registerDependencies();
+
+function initialize() {
+  const { configService } = dependencyContainer;
+
+  configService.load();
+}
+
+initialize();
