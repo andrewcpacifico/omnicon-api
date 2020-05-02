@@ -22,9 +22,9 @@ export class NconfConfigService implements IConfigService {
     env.NODE_ENV = env.NODE_ENV || 'development';
 
     this.nconfProvider.file('environment', {
-      file: join(__dirname, `../../config/${process.env.NODE_ENV}.json`),
+      file: join(__dirname, `../../../config/${process.env.NODE_ENV}.json`),
     }).file('default', {
-      file: join(__dirname, '../../config/default.json'),
+      file: join(__dirname, '../../../config/default.json'),
     });
   }
 
