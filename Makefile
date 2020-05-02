@@ -1,3 +1,5 @@
+service:=app
+
 .PHONY: build
 build:
 	docker-compose build

@@ -2,11 +2,12 @@ import { DependencyContainer, registerDependencies } from './dependency-containe
 
 const dependencyContainer: DependencyContainer = registerDependencies();
 
-function initialize() {
-  const { configService, loggerService } = dependencyContainer;
+async function initialize() {
+  const { configService, databaseService, loggerService } = dependencyContainer;
 
   configService.load();
   loggerService.init();
+  await databaseService.connect();
 }
 
 initialize();
