@@ -10,4 +10,11 @@ async function initialize() {
   await databaseService.connect();
 }
 
-initialize();
+async function main() {
+  const { server } = dependencyContainer;
+
+  await initialize();
+  server.start();
+}
+
+main();
