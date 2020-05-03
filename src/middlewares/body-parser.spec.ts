@@ -3,9 +3,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { BodyParserMiddleware } from '.';
+import { bodyParserMiddleware } from '.';
 
-describe('BodyParserMiddleware', function () {
+describe('bodyParserMiddleware', function () {
   let container: any;
   let jsonHandler: any;
 
@@ -27,8 +27,8 @@ describe('BodyParserMiddleware', function () {
       const next: any = {};
       const { bodyParser } = container;
 
-      const middleware = new BodyParserMiddleware(container);
-      middleware.handler(req, res, next);
+      const middleware = bodyParserMiddleware(container);
+      middleware(req, res, next);
 
       expect(bodyParser.json).to.have.been.calledOnce;
       expect(jsonHandler).to.have.been.calledOnceWith(req, res, next);

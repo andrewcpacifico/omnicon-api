@@ -1,6 +1,6 @@
-import { asClass, asValue, createContainer } from 'awilix';
+import { asClass, asValue, createContainer, asFunction } from 'awilix';
 import bodyParser from 'body-parser';
-import express from 'express';
+import express, { Router } from 'express';
 import mongoose, { Mongoose } from 'mongoose';
 import { Provider } from 'nconf';
 import pino from 'pino';
@@ -10,11 +10,11 @@ import { NconfConfigService } from './services/config';
 import { MongoService } from './services/database';
 import { PinoLoggerService } from './services/logger';
 
-import { IMiddleware } from './middlewares';
-import { BodyParserMiddleware } from './middlewares/express';
+import { v1MainRouter } from './routes';
 
-import { IServer, ExpressServer } from './server';
+import server, { IServer } from './server';
 import { BodyParser, Express, Pino } from './types-3rd';
+import { IMiddleware, bodyParserMiddleware } from './middlewares';
 
 export interface DependencyContainer {
   // node
@@ -32,8 +32,11 @@ export interface DependencyContainer {
   databaseService: IDatabaseService;
   loggerService: ILoggerService;
 
+  // routes
+  v1MainRouter: Router;
+
   // middlewares
-  bodyParserMiddleware: IMiddleware;
+  middlewares: IMiddleware[];
 
   // general
   server: IServer;
@@ -56,11 +59,20 @@ export function registerDependencies(): DependencyContainer {
     databaseService: asClass(MongoService).singleton(),
     loggerService: asClass(PinoLoggerService).singleton(),
 
-    // middlewares
-    bodyParserMiddleware: asClass(BodyParserMiddleware).singleton(),
-
     // general
-    server: asClass(ExpressServer).singleton(),
+    server: asFunction(server).singleton(),
+  });
+
+  // middlewares
+  container.register({
+    middlewares: asValue([
+      asFunction(bodyParserMiddleware).resolve(container),
+    ]),
+  });
+
+  // routes
+  container.register({
+    v1MainRouter: asFunction(v1MainRouter).singleton(),
   });
 
   return container.cradle;
