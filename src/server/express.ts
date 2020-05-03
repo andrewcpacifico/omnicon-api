@@ -1,10 +1,9 @@
-import express, { Express } from 'express';
+import { Express } from 'express';
 
 import { IServer } from '.';
 import { IConfigService, ILoggerService } from '../services';
 import { IMiddleware } from '../middlewares';
-
-type ExpressCreator = typeof express;
+import { Express as ExpressCreator } from '../types-3rd';
 
 interface IExpressServerOptions {
   express: ExpressCreator;

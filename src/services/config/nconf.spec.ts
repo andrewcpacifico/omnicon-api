@@ -1,3 +1,5 @@
+/* tslint:disable only-arrow-functions no-unused-expression */
+
 import { expect } from 'chai';
 import path from 'path';
 import sinon from 'sinon';
@@ -9,7 +11,7 @@ describe('NconfConfig service', function () {
 
   beforeEach(function () {
     container = {
-      nconfProvider: { file() { return this; }, get() {} },
+      nconfProvider: { file() { return this; }, get: sinon.stub() },
       process: { env: {} },
     };
   });
@@ -64,7 +66,7 @@ describe('NconfConfig service', function () {
       const configService = new NconfConfigService(container);
       const value = 'a';
 
-      sinon.stub(container.nconfProvider, 'get').returns(value);
+      container.nconfProvider.get.returns(value);
       const result = configService.get('prop');
 
       expect(container.nconfProvider.get)

@@ -1,3 +1,5 @@
+/* tslint:disable only-arrow-functions no-unused-expression no-string-literal */
+
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -63,7 +65,7 @@ describe('expressServer', function () {
 
   describe('applyMiddleware', function () {
     it('should use middleware.handler', function () {
-      const middleware = { handler() {} };
+      const middleware = { handler: sinon.stub() };
 
       const server = new ExpressServer(container);
       server['expressApp'] = expressApp;

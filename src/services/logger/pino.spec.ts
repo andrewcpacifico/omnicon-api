@@ -1,3 +1,5 @@
+/* tslint:disable only-arrow-functions no-unused-expression no-string-literal */
+
 import sinon from 'sinon';
 import { expect } from 'chai';
 
@@ -8,9 +10,9 @@ describe('PinoLoggerService', function () {
   let pinoInstance: any;
 
   beforeEach(function () {
-    pinoInstance = { info() {}, debug() {}, error() {} };
+    pinoInstance = { info: sinon.stub(), debug: sinon.stub(), error: sinon.stub() };
     container = {
-      configService: { get: () => {} },
+      configService: { get: sinon.stub() },
       pino: () => pinoInstance,
     };
   });
@@ -31,8 +33,7 @@ describe('PinoLoggerService', function () {
 
     it('should get logger configuration', function () {
       const config = { a: 1 };
-      const configServiceStub = sinon.stub(container.configService, 'get')
-        .returns(config);
+      const configServiceStub = container.configService.get.returns(config);
       const pinoSpy = sinon.spy(container, 'pino');
 
       const loggerService = new PinoLoggerService(container);
@@ -49,8 +50,6 @@ describe('PinoLoggerService', function () {
       const loggerService = new PinoLoggerService(container);
       loggerService['pinoLogger'] = pinoInstance;
 
-      sinon.stub(loggerService['pinoLogger'], 'info');
-
       loggerService.info('a', ...params);
 
       expect(loggerService['pinoLogger'].info).to.have.been.calledOnceWith('a', ...params);
@@ -63,8 +62,6 @@ describe('PinoLoggerService', function () {
       const loggerService = new PinoLoggerService(container);
       loggerService['pinoLogger'] = pinoInstance;
 
-      sinon.stub(loggerService['pinoLogger'], 'debug');
-
       loggerService.debug('a', ...params);
 
       expect(loggerService['pinoLogger'].debug).to.have.been.calledOnceWith('a', ...params);
@@ -76,8 +73,6 @@ describe('PinoLoggerService', function () {
       const params = ['1', '2'];
       const loggerService = new PinoLoggerService(container);
       loggerService['pinoLogger'] = pinoInstance;
-
-      sinon.stub(loggerService['pinoLogger'], 'error');
 
       loggerService.error('a', ...params);
 

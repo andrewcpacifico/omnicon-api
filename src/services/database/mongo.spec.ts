@@ -1,3 +1,5 @@
+/* tslint:disable only-arrow-functions no-unused-expression */
+
 import { expect } from 'chai';
 import sinon from 'sinon';
 
