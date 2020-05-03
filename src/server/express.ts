@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 
 import { IServer } from '.';
 import { IConfigService, ILoggerService } from '../services';
+import { IMiddleware } from '../middlewares';
 
 type ExpressCreator = typeof express;
 
@@ -23,9 +24,11 @@ export class ExpressServer implements IServer {
     this.loggerService = loggerService;
   }
 
-  public start(): Promise<void> {
+  public init(): void {
     this.expressApp = this.expressCreator();
+  }
 
+  public start(): Promise<void> {
     return new Promise((resolve, reject) => {
       const { port } = this.configService.get('server');
       this.expressApp.listen(port, (err: any) => {
@@ -37,5 +40,9 @@ export class ExpressServer implements IServer {
         resolve();
       });
     });
+  }
+
+  public applyMiddleware(middleware: IMiddleware): void {
+    this.expressApp.use(middleware.handler);
   }
 }
