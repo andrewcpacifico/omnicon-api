@@ -8,11 +8,13 @@ import { MongoService } from '.';
 describe('MongoDatabaseService', function () {
   let container: any;
   let config: any;
+  let client: any;
 
   beforeEach(function () {
+    client = {};
     config = { host: 'host', database: 'database' };
     container = {
-      mongoose: { connect: sinon.stub().resolves() },
+      mongo: { connect: sinon.stub().resolves(client) },
       configService: { get: sinon.stub().returns(config) },
       loggerService: { info: sinon.stub(), error: sinon.stub() },
     };
@@ -31,8 +33,8 @@ describe('MongoDatabaseService', function () {
       expect(configService.get).to.have.been.calledOnceWith('mongo');
     });
 
-    it('should use mongoose connect with corret params', async function () {
-      const { mongoose } = container;
+    it('should use mongo connect with corret params', async function () {
+      const { mongo } = container;
       const { host, database } = config;
 
       const url = `mongodb://${host}/${database}`;
@@ -44,14 +46,14 @@ describe('MongoDatabaseService', function () {
       const mongoService: MongoService = new MongoService(container);
       await mongoService.connect();
 
-      expect(mongoose.connect).to.have.been.calledOnceWith(...opts);
+      expect(mongo.connect).to.have.been.calledOnceWith(...opts);
     });
 
     it('should log and throw error', async function () {
-      const { mongoose, loggerService } = container;
+      const { mongo, loggerService } = container;
       const err = { msg: 'Error' };
 
-      mongoose.connect = sinon.stub().rejects(err);
+      mongo.connect = sinon.stub().rejects(err);
 
       const mongoService: MongoService = new MongoService(container);
 
@@ -61,6 +63,15 @@ describe('MongoDatabaseService', function () {
         expect(error).to.be.equal(err);
         expect(loggerService.error).to.have.been.calledOnce;
       }
+    });
+  });
+
+  describe('getClient', function () {
+    it('should return internal mongo client', function () {
+      const mongoService = new MongoService(container);
+      const mongoClient = mongoService.getClient();
+
+      expect(mongoClient).to.be.equal(mongoClient);
     });
   });
 });

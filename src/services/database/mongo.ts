@@ -1,32 +1,34 @@
-import { Mongoose } from 'mongoose';
+import { MongoClient } from 'mongodb';
 
 import { IConfigService, IDatabaseService, ILoggerService } from '..';
+import { MongoModule } from '../../types-3rd';
 
 interface IMongoServiceOptions {
   configService: IConfigService;
   loggerService: ILoggerService;
-  mongoose: Mongoose;
+  mongo: MongoModule;
 }
 
 export class MongoService implements IDatabaseService {
   private configService: IConfigService;
   private loggerService: ILoggerService;
-  private mongoose: Mongoose;
+  private mongo: MongoModule;
+  private mongoClient!: MongoClient;
 
-  constructor({ mongoose, configService, loggerService }: IMongoServiceOptions) {
+  constructor({ mongo, configService, loggerService }: IMongoServiceOptions) {
     this.configService = configService;
     this.loggerService = loggerService;
-    this.mongoose = mongoose;
+    this.mongo = mongo;
   }
 
-  async connect() {
+  public async connect() {
     const { host, database } = this.configService.get('mongo');
 
     const url = `mongodb://${host}/${database}`;
 
     this.loggerService.info('Connecting do mongo database');
     try {
-      await this.mongoose.connect(url, {
+      this.mongoClient = await this.mongo.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
@@ -36,5 +38,9 @@ export class MongoService implements IDatabaseService {
       this.loggerService.error('Error connecting to mongo.');
       throw err;
     }
+  }
+
+  public getClient(): MongoClient {
+    return this.mongoClient;
   }
 }

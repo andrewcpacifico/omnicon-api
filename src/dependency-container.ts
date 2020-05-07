@@ -1,9 +1,14 @@
-import { asClass, asValue, createContainer, asFunction } from 'awilix';
+import { asClass, asValue, createContainer, asFunction, aliasTo } from 'awilix';
 import bodyParser from 'body-parser';
 import express, { Router } from 'express';
-import mongoose, { Mongoose } from 'mongoose';
+import mongo from 'mongodb';
 import { Provider } from 'nconf';
 import pino from 'pino';
+
+import { IDao } from './dao';
+import { TaskMongoDao } from './dao/mongo';
+
+import { Task } from './models';
 
 import { IConfigService, IDatabaseService, ILoggerService } from './services';
 import { NconfConfigService } from './services/config';
@@ -13,7 +18,7 @@ import { PinoLoggerService } from './services/logger';
 import { v1MainRouter } from './routes';
 
 import server, { IServer } from './server';
-import { BodyParser, Express, Pino } from './types-3rd';
+import { BodyParser, Express, MongoModule, Pino } from './types-3rd';
 import { IMiddleware, bodyParserMiddleware } from './middlewares';
 
 export interface DependencyContainer {
@@ -23,13 +28,17 @@ export interface DependencyContainer {
   // 3rd
   bodyParser: BodyParser;
   express: Express;
+  mongo: MongoModule;
   nconfProvider: Provider;
-  mongoose: Mongoose;
   pino: Pino;
+
+  // dao
+  taskDao: IDao<Task>;
 
   // services
   configService: IConfigService;
   databaseService: IDatabaseService;
+  mongoService: MongoService;
   loggerService: ILoggerService;
 
   // routes
@@ -48,15 +57,23 @@ export function registerDependencies(): DependencyContainer {
   container.register({
     bodyParser: asValue(bodyParser),
     express: asValue(express),
-    mongoose: asValue(mongoose),
+    mongo: asValue(mongo),
     nconfProvider: asValue(new Provider()),
     pino: asValue(pino),
 
     process: asValue(process),
+  });
 
+  // dao
+  container.register({
+    taskDao: asClass(TaskMongoDao).singleton(),
+  });
+
+  container.register({
     // services
     configService: asClass(NconfConfigService).singleton(),
-    databaseService: asClass(MongoService).singleton(),
+    mongoService: asClass(MongoService).singleton(),
+    databaseService: aliasTo('mongoService'),
     loggerService: asClass(PinoLoggerService).singleton(),
 
     // general
