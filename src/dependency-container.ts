@@ -10,10 +10,16 @@ import { TaskMongoDao } from './dao/mongo';
 
 import { Task } from './models';
 
-import { IConfigService, IDatabaseService, ILoggerService } from './services';
+import {
+  IConfigService,
+  IDatabaseService,
+  ILoggerService,
+  ITaskService,
+} from './services';
 import { NconfConfigService } from './services/config';
 import { MongoService } from './services/database';
 import { PinoLoggerService } from './services/logger';
+import { DefaultTaskService } from './services/task';
 
 import { v1MainRouter } from './routes';
 
@@ -40,6 +46,7 @@ export interface DependencyContainer {
   databaseService: IDatabaseService;
   mongoService: MongoService;
   loggerService: ILoggerService;
+  taskService: ITaskService;
 
   // routes
   v1MainRouter: Router;
@@ -75,6 +82,7 @@ export function registerDependencies(): DependencyContainer {
     mongoService: asClass(MongoService).singleton(),
     databaseService: aliasTo('mongoService'),
     loggerService: asClass(PinoLoggerService).singleton(),
+    taskService: asClass(DefaultTaskService).singleton(),
 
     // general
     server: asFunction(server).singleton(),
