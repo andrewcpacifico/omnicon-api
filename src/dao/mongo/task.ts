@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-import { IDao } from '..';
+import { IDao, FindOptions } from '..';
 import { Task } from '../../models';
 import { MongoService } from '../../services/database';
 import { IConfigService } from '../../services';
@@ -21,12 +21,12 @@ export class TaskMongoDao implements IDao<Task> {
     this.configService = configService;
   }
 
-  public find(query: any): Promise<Task[]> {
+  public find(query: any, { limit, offset }: FindOptions): Promise<Task[]> {
     const client: MongoClient = this.mongoService.getClient();
     const dbName: string = this.configService.get('mongo').database;
     const db = client.db(dbName);
     const collection = db.collection<Task>(COLLECTION);
 
-    return collection.find(query).toArray();
+    return collection.find(query, { skip: offset, limit }).toArray();
   }
 }
