@@ -23,13 +23,25 @@ describe('DefaultTaskService', function () {
       expect(taskDao.find).to.have.been.calledOnce;
     });
 
-    it('should call taskDao.find correct query', async function () {
+    it('should call taskDao.find with correct query', async function () {
       const { taskDao } = container;
+      const filter = { dueDate: new Date() };
 
       const service = new DefaultTaskService(container);
-      await service.getAll();
+      await service.getAll({ filter });
 
-      expect(taskDao.find).to.have.been.calledWith({});
+      expect(taskDao.find).to.have.been.calledWith(filter);
+    });
+
+    it('should call taskDao.find with limit and offset parameters', async function () {
+      const { taskDao } = container;
+      const limit = 2;
+      const offset = 3;
+
+      const service = new DefaultTaskService(container);
+      await service.getAll({ limit, offset });
+
+      expect(taskDao.find).to.have.been.calledWith(undefined, { limit, offset });
     });
 
     it('should return taskDao.find', async function () {
