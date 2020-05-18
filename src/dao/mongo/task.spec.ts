@@ -33,21 +33,21 @@ describe('TaskDao', function () {
       const { mongoService } = container;
 
       const taskDao = new TaskMongoDao(container);
-      await taskDao.find({});
+      await taskDao.find({}, {});
 
       expect(mongoService.getClient).to.have.been.calledOnce;
     });
 
     it('should select correct db', async function() {
       const taskDao = new TaskMongoDao(container);
-      await taskDao.find({});
+      await taskDao.find({}, {});
 
       expect(mongoClientMock.db).to.have.been.calledOnceWith(dbName);
     });
 
     it('should select correct collection', async function() {
       const taskDao = new TaskMongoDao(container);
-      await taskDao.find({});
+      await taskDao.find({}, {});
 
       expect(dbMock.collection).to.have.been.calledOnceWith('tasks');
     });
@@ -55,9 +55,23 @@ describe('TaskDao', function () {
     it('should run query', async function() {
       const query = { name: 'a' };
       const taskDao = new TaskMongoDao(container);
-      await taskDao.find(query);
+      await taskDao.find(query, {});
 
       expect(collectionMock.find).to.have.been.calledOnceWith(query);
+    });
+
+    it('should pass limit and offset parameters to mongo', async function() {
+      const limit = 5;
+      const offset = 10;
+
+      const taskDao = new TaskMongoDao(container);
+      await taskDao.find({}, { limit, offset });
+
+      expect(collectionMock.find)
+        .to
+        .have
+        .been
+        .calledOnceWith(sinon.match.object, { limit, skip: offset });
     });
 
     it('should return cursor.toArray', async function() {
@@ -65,7 +79,7 @@ describe('TaskDao', function () {
       cursorMock.toArray = sinon.stub().resolves(result);
 
       const taskDao = new TaskMongoDao(container);
-      const tasks = await taskDao.find({});
+      const tasks = await taskDao.find({}, {});
 
       expect(tasks).to.be.equal(result);
     });
