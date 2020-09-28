@@ -2,7 +2,10 @@
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
   "include": [ "src/**/*" ],
-  "exclude": [ "**/*.spec.ts" ],
+  "exclude": [
+    "**/*.spec.ts",
+    "src/dependency-container.ts"
+  ],
   "reporter": [
     "html",
     "text",
