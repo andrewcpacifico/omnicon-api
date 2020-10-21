@@ -36,7 +36,7 @@ import { taskControllerModule, ITaskController } from './controllers';
 import { v1MainRouter, v1TaskRouter } from './routes/v1';
 
 import server, { IServer } from './server';
-import { IMiddleware, bodyParserMiddleware } from './middlewares';
+import { IMiddleware, bodyParserMiddleware, corsMiddleware } from './middlewares';
 
 export interface DependencyContainer {
   // node
@@ -116,6 +116,7 @@ export function registerDependencies(): DependencyContainer {
   container.register({
     middlewares: asValue([
       asFunction(bodyParserMiddleware).resolve(container),
+      asFunction(corsMiddleware).resolve(container),
     ]),
   });
 
