@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { ITaskService } from "../services/task";
 import { Task } from '../models';
+import { IFormatter } from '../formatters';
 
 export interface ITaskController {
   list(req: Request, res: Response): Promise<any>;
@@ -9,6 +10,7 @@ export interface ITaskController {
 
 type Dependencies = {
   taskService: ITaskService;
+  taskListFormatter: IFormatter<Task>;
 };
 
 type ListQueryParams = {
@@ -17,7 +19,7 @@ type ListQueryParams = {
   dueDate?: Date;
 };
 
-export function taskControllerModule({ taskService }: Dependencies): ITaskController {
+export function taskControllerModule({ taskService, taskListFormatter }: Dependencies): ITaskController {
   return {
     async list(req: Request<any, any, any, ListQueryParams>, res: Response) {
       const { dueDate, offset, limit } = req.query;
@@ -29,7 +31,8 @@ export function taskControllerModule({ taskService }: Dependencies): ITaskContro
         limit,
         offset,
       });
-      res.json(tasks);
+
+      res.json(taskListFormatter.format(tasks));
     }
   };
 }

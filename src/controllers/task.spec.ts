@@ -7,10 +7,12 @@ import { taskControllerModule, ITaskController } from './task';
 describe('TaskController', function () {
   let container: any;
   let taskController: ITaskController;
+  let formatterMock: any;
   let reqMock: any;
   let resMock: any;
 
   beforeEach(function() {
+    formatterMock = { format: sinon.stub() };
     resMock = { json: sinon.stub() };
     reqMock = {
       query: {
@@ -20,7 +22,8 @@ describe('TaskController', function () {
       },
     };
     container = {
-      taskService: { getAll: sinon.stub() }
+      taskService: { getAll: sinon.stub() },
+      taskListFormatter: formatterMock,
     };
     taskController = taskControllerModule(container);
   });
@@ -30,15 +33,17 @@ describe('TaskController', function () {
   });
 
   describe('list', function () {
-    it('should res.json once with taskService result', async function() {
+    it('should res.json once with taskService formatted result', async function() {
       const { taskService } = container;
-      const tasks = [{ id: 'task 1'}];
+      const tasks = [{ _id: '123', title: 'task 1'}];
+      const formattedTasks = [{ id: '123', title: 'task 1'}];
 
       taskService.getAll = sinon.stub().resolves(tasks);
+      formatterMock.format.returns(formattedTasks)
 
       await taskController.list(reqMock, resMock);
 
-      expect(resMock.json).to.have.been.calledOnceWith(tasks);
+      expect(resMock.json).to.have.been.calledOnceWith(formattedTasks);
     });
 
     it('should call taskService.getAll once with correct arguments', async function() {

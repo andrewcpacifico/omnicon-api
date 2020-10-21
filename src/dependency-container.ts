@@ -37,6 +37,8 @@ import { v1MainRouter, v1TaskRouter } from './routes/v1';
 
 import server, { IServer } from './server';
 import { IMiddleware, bodyParserMiddleware, corsMiddleware } from './middlewares';
+import { TaskListFormatter } from './formatters/task';
+import { IFormatter } from './formatters';
 
 export interface DependencyContainer {
   // node
@@ -60,6 +62,9 @@ export interface DependencyContainer {
   mongoService: MongoService;
   loggerService: ILoggerService;
   taskService: ITaskService;
+
+  // formatters
+  taskListFormatter: IFormatter<Task>;
 
   // controllers
   taskController: ITaskController;
@@ -102,6 +107,9 @@ export function registerDependencies(): DependencyContainer {
     databaseService: aliasTo('mongoService'),
     loggerService: asClass(PinoLoggerService).singleton(),
     taskService: asClass(DefaultTaskService).singleton(),
+
+    // formatters
+    taskListFormatter: asClass(TaskListFormatter).singleton(),
 
     // general
     server: asFunction(server).singleton(),
