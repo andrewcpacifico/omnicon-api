@@ -58,5 +58,20 @@ describe('TaskController', function () {
         offset,
       });
     });
+
+    it('dueDate filter should not be defined if no dueDate is given via req.query', async function() {
+      const { taskService } = container;
+      const { limit, offset } = reqMock.query;
+
+      delete reqMock.query.dueDate;
+
+      await taskController.list(reqMock, resMock);
+
+      expect(taskService.getAll).to.have.been.calledOnceWithExactly({
+        filter: {},
+        limit,
+        offset,
+      });
+    });
   });
 });
