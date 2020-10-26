@@ -32,7 +32,7 @@ test:
 
 .PHONY: coverage
 coverage:
-	docker-compose run --rm --no-deps app yarn coverage
+	docker-compose run --rm app yarn coverage
 
 # dependency management
 .PHONY: add-dependency
