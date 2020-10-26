@@ -44,7 +44,7 @@ export default function({
         }
 
         loggerService.info(`Omnicon API listening on port ${port}`);
-        resolve();
+        resolve(app);
       });
     });
   }

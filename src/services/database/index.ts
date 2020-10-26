@@ -1,5 +1,7 @@
 export { MongoService } from './mongo';
 
 export interface IDatabaseService {
-  connect(): void;
+  connect(): Promise<void>;
+  getClient(): any;
+  disconnet(): Promise<void>;
 };
