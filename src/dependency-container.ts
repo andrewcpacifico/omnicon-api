@@ -2,6 +2,7 @@ import { asClass, asValue, createContainer, asFunction, aliasTo } from 'awilix';
 import bodyParser from 'body-parser';
 import express, { Router } from 'express';
 import { Joi, validate } from 'express-validation';
+import moment from 'moment';
 import mongo from 'mongodb';
 import { Provider } from 'nconf';
 import pino from 'pino';
@@ -13,6 +14,7 @@ import {
   MongoModule,
   ValidateMiddleware,
   Pino,
+  MomentModule,
 } from './types-3rd';
 
 import { IDao } from './dao';
@@ -48,6 +50,7 @@ export interface DependencyContainer {
   bodyParser: BodyParser;
   express: Express;
   joi: JoiModule;
+  moment: MomentModule;
   mongo: MongoModule;
   nconfProvider: Provider;
   pino: Pino;
@@ -87,6 +90,7 @@ export function registerDependencies(): DependencyContainer {
     bodyParser: asValue(bodyParser),
     express: asValue(express),
     joi: asValue(Joi),
+    moment: asValue(moment),
     mongo: asValue(mongo),
     nconfProvider: asValue(new Provider()),
     pino: asValue(pino),

@@ -10,6 +10,13 @@ describe('DefaultTaskService', function () {
   beforeEach(function () {
     container = {
       taskDao: { find: sinon.stub() },
+      moment: {
+        utc: sinon.stub().returnsThis(),
+        startOf: sinon.stub().returnsThis(),
+        endOf: sinon.stub().returnsThis(),
+        clone: sinon.stub().returnsThis(),
+        toDate: sinon.stub(),
+      },
     };
   });
 
@@ -25,12 +32,26 @@ describe('DefaultTaskService', function () {
 
     it('should call taskDao.find with correct query', async function () {
       const { taskDao } = container;
-      const filter = { dueDate: new Date() };
+      const startDate = new Date('2020-10-01T00:00:00.000Z');
+      const endDate = new Date('2020-10-01T23:59:59.999Z');
+      const filter = { dueDate: startDate };
+
+      container.moment.toDate = sinon.stub().returns(startDate);
+      container.moment.clone = () => ({
+        endOf: () => ({
+          toDate: sinon.stub().returns(endDate),
+        }),
+      });
 
       const service = new DefaultTaskService(container);
       await service.getAll({ filter });
 
-      expect(taskDao.find).to.have.been.calledWith(filter);
+      expect(taskDao.find).to.have.been.calledWith({
+        dueDate: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      });
     });
 
     it('should call taskDao.find with limit and offset parameters', async function () {
@@ -41,7 +62,7 @@ describe('DefaultTaskService', function () {
       const service = new DefaultTaskService(container);
       await service.getAll({ limit, offset });
 
-      expect(taskDao.find).to.have.been.calledWith(undefined, { limit, offset });
+      expect(taskDao.find).to.have.been.calledWith({}, { limit, offset });
     });
 
     it('should return taskDao.find', async function () {
