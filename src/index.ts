@@ -1,6 +1,4 @@
-import { DependencyContainer, registerDependencies } from './dependency-container';
-
-const dependencyContainer: DependencyContainer = registerDependencies();
+import { dependencyContainer } from './dependency-container';
 
 async function initialize() {
   const {
@@ -18,7 +16,7 @@ async function main() {
   const { server } = dependencyContainer;
 
   await initialize();
-  server.start();
+  return server.start();
 }
 
-main();
+export default main();

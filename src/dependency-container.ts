@@ -83,7 +83,7 @@ export interface DependencyContainer {
   server: IServer;
 }
 
-export function registerDependencies(): DependencyContainer {
+function registerDependencies(): DependencyContainer {
   const container = createContainer<DependencyContainer>();
 
   container.register({
@@ -140,3 +140,5 @@ export function registerDependencies(): DependencyContainer {
 
   return container.cradle;
 }
+
+export const dependencyContainer = registerDependencies();

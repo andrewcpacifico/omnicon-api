@@ -40,6 +40,10 @@ export class MongoService implements IDatabaseService {
     }
   }
 
+  public disconnet(): Promise<void> {
+    return this.mongoClient.close();
+  }
+
   public getClient(): MongoClient {
     return this.mongoClient;
   }

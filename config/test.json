@@ -1,0 +1,12 @@
+{
+  "mongo": {
+    "host": "mongo",
+    "database": "omnicon-test"
+  },
+  "logger": {
+    "level": "error",
+    "prettyPrint": {
+      "colorize": true
+    }
+  }
+}
